@@ -1,18 +1,22 @@
 #pragma once
 #include "TurnstileGate.h"
-#include "TurnstileState.h"
+
 class TurnstileFSM
-	: public TurnstileGate, public TurnstileState
+	: public TurnstileGate
 {
 public:
 	TurnstileFSM();
 
-	virtual void Coin();
-	virtual void Pass();
+	void Coin();
+	void Pass();
 	void Reset();
 	void Ready();
-	void SetState(TurnstileState tss);
+	void SetState(int state);
+	int GetState();
 
 	virtual~TurnstileFSM();
+
+private:
+	TurnstileGate gate;
 };
 

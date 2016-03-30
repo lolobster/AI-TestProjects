@@ -3,30 +3,54 @@
 #include <iostream>
 #include <string>
 
+bool keyPressed(int key)
+{
+	return (GetAsyncKeyState(key) & 0x8000);
+}
+
+void menu()
+{
+	std::cout << "1 - Coin" << std::endl;
+	std::cout << "2 - Pass" << std::endl;
+	std::cout << "3 - Reset" << std::endl;
+	std::cout << "4 - Ready" << std::endl << std::endl;
+	std::cout << "paina nappia(1-4): ";
+	Sleep(1000);
+}
+
 int main()
 {
 	TurnstileFSM ts;
-// User input
-	std::cout << "paina nappia(1-4) keijo: ";
-
-
 	
-	if (GetAsyncKeyState(1))
-	{
-		ts.Coin();
+	bool exit = false;
+
+	menu();
+
+	while (exit != true){
+		if (GetAsyncKeyState(0x31))
+		{
+			ts.Coin();
+			menu();
+		}
+		if (GetAsyncKeyState(0x32))
+		{
+			ts.Pass();
+			menu();
+		}
+		if (GetAsyncKeyState(0x33))
+		{
+			ts.Reset();
+			menu();
+		}
+		if (GetAsyncKeyState(0x34))
+		{
+			ts.Ready();
+			menu();
+		}
+		if (GetAsyncKeyState(0x30))
+		{
+			exit = true;
+		}
 	}
-	if (GetAsyncKeyState(2))
-	{
-		ts.Pass();
-	}
-	if (GetAsyncKeyState(3))
-	{
-		ts.Reset();
-	}
-	if (GetAsyncKeyState(4))
-	{
-		ts.Ready();
-	}
-	
 	system("pause");
 }

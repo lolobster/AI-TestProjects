@@ -21,9 +21,6 @@
     <ClCompile Include="Turnstile FSM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TurnstileState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LockedState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -39,9 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TurnstileFSM.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TurnstileState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LockedState.h">

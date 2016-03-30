@@ -1,7 +1,7 @@
 #pragma once
-#include "TurnstileState.h"
+#include "TurnstileGate.h"
 class LockedState :
-	public TurnstileState
+	public TurnstileGate
 {
 public:
 	LockedState();
