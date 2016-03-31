@@ -64,19 +64,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LockedState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Turnstile FSM.cpp" />
     <ClCompile Include="TurnstileGate.cpp" />
-    <ClCompile Include="UnlockedState.cpp" />
-    <ClCompile Include="ViolationState.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LockedState.h" />
     <ClInclude Include="TurnstileGate.h" />
     <ClInclude Include="TurnstileFSM.h" />
-    <ClInclude Include="UnlockedState.h" />
-    <ClInclude Include="ViolationState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

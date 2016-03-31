@@ -21,16 +21,7 @@
     <ClCompile Include="Turnstile FSM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LockedState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UnlockedState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TurnstileGate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ViolationState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,16 +29,7 @@
     <ClInclude Include="TurnstileFSM.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LockedState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UnlockedState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TurnstileGate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ViolationState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
