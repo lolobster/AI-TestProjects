@@ -42,7 +42,7 @@ void TurnstileFSM::Pass()
 	{
 	case locked:
 	{
-		gate.Violation();
+		gate.Alarm();
 		break;
 	}
 	case unlocked:
@@ -75,13 +75,8 @@ void TurnstileFSM::Reset()
 
 void TurnstileFSM::Ready()
 {
-	if (gate.getState() == violation)
-	{
-		gate.ResetAlarm();
-		gate.Lock();
-	}
-	else
-		printf_s("Violation state not active!\n\n");
+	gate.ResetAlarm();
+	gate.Lock();
 }
 
 void TurnstileFSM::SetState(int state)

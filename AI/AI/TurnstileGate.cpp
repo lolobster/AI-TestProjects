@@ -18,13 +18,11 @@ int TurnstileGate::getState()
 
 void TurnstileGate::Lock()
 {
-	setState(locked);
 	printf_s("Locked\n\n");
 }
 
 void TurnstileGate::Unlock()
 {
-	setState(unlocked);
 	printf_s("Unlocked\n\n");
 }
 
@@ -45,7 +43,6 @@ void TurnstileGate::ResetAlarm()
 
 void TurnstileGate::Violation()
 {
-	setState(violation);
 	printf_s("Violation!\n\n");
 }
 

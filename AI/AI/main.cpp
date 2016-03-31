@@ -13,9 +13,8 @@ void menu()
 	std::cout << "1 - Coin" << std::endl;
 	std::cout << "2 - Pass" << std::endl;
 	std::cout << "3 - Reset" << std::endl;
-	std::cout << "4 - Ready" << std::endl;
-	std::cout << "0 - Exit" << std::endl << std::endl;
-	std::cout << "Press a button (0-4): ";
+	std::cout << "4 - Ready" << std::endl << std::endl;
+	std::cout << "paina nappia(1-4): ";
 	Sleep(1000);
 }
 
@@ -50,8 +49,6 @@ int main()
 		}
 		if (GetAsyncKeyState(0x30))
 		{
-			printf_s("Exit chosen!\n");
-			printf_s("\n\n");
 			exit = true;
 		}
 	}
