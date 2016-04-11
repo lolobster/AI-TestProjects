@@ -1,3 +1,0 @@
-Start finding path from input image: "input.png"
-Path find done. Time spent 0.995 seconds
-
