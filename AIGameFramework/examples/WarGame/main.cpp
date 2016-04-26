@@ -8,6 +8,7 @@
 #include "GameApp.h"
 
 #include "ExampleBehaviours.h"
+#include "LobsterAI.h"
 #include "JoystickController.h"
 
 
@@ -59,6 +60,7 @@ private:
 	std::vector< yam2d::Ref<JoystickController> > m_joystickControllers;
 	std::vector< yam2d::Ref<DirectMoverAI> > m_directMoverAIControllers;
 	std::vector< yam2d::Ref<AutoAttackFlagCarryingBot> > m_autoAttackFlagCarryingBots;
+	std::vector < yam2d::Ref<LobsterAI> > m_lobsterAI;
 
 public:
 	MyPlayerController()
@@ -112,6 +114,13 @@ public:
 		{
 			AutoAttackFlagCarryingBot* controller = new AutoAttackFlagCarryingBot(ownerGameObject, gameController, type);
 			m_autoAttackFlagCarryingBots.push_back(controller);
+			return controller;
+		}
+
+		if (playerName == "LobsterAI")
+		{
+			LobsterAI* controller = new LobsterAI(ownerGameObject, gameController, type);
+			m_lobsterAI.push_back(controller);
 			return controller;
 		}
 		return 0;
@@ -313,7 +322,7 @@ int main(int argc, char *argv[])
 	app.disableLayer("GroundTypeColliders");
 	app.disableLayer("GroundMoveSpeed");
 	//app.setLayerOpacity("GroundMoveSpeed", 0.7f); 
-	app.setDefaultGame("level1.tmx", "DirectMoverAI", "DirectMoverAI", 4);
+	app.setDefaultGame("level1.tmx", "LobsterAI", "DirectMoverAI", 4);
 	//app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "DirectMoverAI", 4);
 //	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", 4);
 //	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", 4);
