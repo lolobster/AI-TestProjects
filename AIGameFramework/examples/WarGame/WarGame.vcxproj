@@ -85,10 +85,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pathfinding\ClosedList.cpp" />
+    <ClCompile Include="Pathfinding\OpenList.cpp" />
+    <ClCompile Include="Pathfinding\PathFindingApp.cpp" />
+    <ClCompile Include="Pathfinding\SearchLevel.cpp" />
+    <ClCompile Include="Pathfinding\SearchNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExampleBehaviours.h" />
     <ClInclude Include="LobsterAI.h" />
+    <ClInclude Include="Pathfinding\ClosedList.h" />
+    <ClInclude Include="Pathfinding\OpenList.h" />
+    <ClInclude Include="Pathfinding\PathFindingApp.h" />
+    <ClInclude Include="Pathfinding\SearchLevel.h" />
+    <ClInclude Include="Pathfinding\SearchNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

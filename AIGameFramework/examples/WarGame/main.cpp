@@ -12,56 +12,16 @@
 #include "JoystickController.h"
 
 
-
-class MyAI : public CharacterController
-{
-public:
-	MyAI(yam2d::GameObject* owner, GameController* gameController, BotType botType)
-		: CharacterController(owner, gameController, botType)
-	{
-	}
-
-	virtual ~MyAI(void)
-	{
-	}
-
-	virtual void onMessage(const std::string& msgName, yam2d::Object* eventObject)
-	{
-		// Call onMessage to base class
-		CharacterController::onMessage(msgName, eventObject);
-
-		// TODO: handle message...
-	}
-
-	// This virtual method is automatically called byt map/layer, when update is called from main.cpp
-	virtual void update(float deltaTime)
-	{
-		// Call update to base class
-		CharacterController::update(deltaTime);
-
-		// TODO: Update...
-	}
-
-private:
-
-};
-
-
-
-
-
-
-
 class MyPlayerController : public PlayerController
 {
 private:
 	std::string m_myTeamName;
-	std::vector< yam2d::Ref<MyAI> > m_myAIControllers;
 	std::vector< yam2d::Ref<JoystickController> > m_joystickControllers;
 	std::vector< yam2d::Ref<DirectMoverAI> > m_directMoverAIControllers;
 	std::vector< yam2d::Ref<AutoAttackFlagCarryingBot> > m_autoAttackFlagCarryingBots;
 	std::vector < yam2d::Ref<LobsterAI> > m_lobsterAI;
 
+	LobsterAI* lobster;
 public:
 	MyPlayerController()
 		: PlayerController()
@@ -96,13 +56,6 @@ public:
 			return new CharacterController(ownerGameObject, gameController, type);
 		}
 
-		if (playerName == "MyAI")
-		{
-			MyAI* myAI = new MyAI(ownerGameObject, gameController, type);
-			m_myAIControllers.push_back(myAI);
-			return myAI;
-		}
-
 		if (playerName == "DirectMoverAI")
 		{
 			DirectMoverAI* controller = new DirectMoverAI(ownerGameObject, gameController, type);
@@ -119,9 +72,9 @@ public:
 
 		if (playerName == "LobsterAI")
 		{
-			LobsterAI* controller = new LobsterAI(ownerGameObject, gameController, type);
-			m_lobsterAI.push_back(controller);
-			return controller;
+			lobster = new LobsterAI(ownerGameObject, gameController, type);
+			m_lobsterAI.push_back(lobster);
+			return lobster;
 		}
 		return 0;
 	}
@@ -132,9 +85,10 @@ public:
 		yam2d::esLogMessage("onGameStarted");
 		// Start going straight to dynamite
 		const yam2d::GameObject* dynamite = environmentInfo->getDynamite();
-		for (size_t i = 0; i < m_directMoverAIControllers.size(); ++i)
+		lobster->setMyHomeBase(environmentInfo, this);
+		for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 		{
-			m_directMoverAIControllers[i]->setMoveTargetObject(dynamite, 1.0f);
+			m_lobsterAI[i]->setMoveTargetObject(dynamite, 1.0f);
 		}
 	}
 
@@ -145,7 +99,7 @@ public:
 		yam2d::esLogMessage("onGameOver: %s wins!", gameResultString.c_str());
 		for (size_t i = 0; i < m_directMoverAIControllers.size(); ++i)
 		{
-			m_directMoverAIControllers[i]->resetMoveTargetObject();
+			m_lobsterAI[i]->resetMoveTargetObject();
 		}
 
 		for (size_t i = 0; i < m_autoAttackFlagCarryingBots.size(); ++i)
@@ -224,9 +178,9 @@ public:
 				// My team picked item. 
 				// Go to enemy home base.
 				const yam2d::GameObject* homeBase = environmentInfo->getEnemyHomeBase(this);
-				for (size_t i = 0; i < m_directMoverAIControllers.size(); ++i)
+				for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 				{
-					m_directMoverAIControllers[i]->setMoveTargetObject(homeBase, 1.0f);
+					m_lobsterAI[i]->setMoveTargetObject(homeBase, 1.0f);
 				}
 			}
 			else
@@ -234,9 +188,9 @@ public:
 				// Other team picked the item.
 				// Go to enemy's enemy == me home base.
 				const yam2d::GameObject* homeBase = environmentInfo->getMyHomeBase(this);
-				for (size_t i = 0; i < m_directMoverAIControllers.size(); ++i)
+				for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 				{
-					m_directMoverAIControllers[i]->setMoveTargetObject(homeBase, 1.0f);
+					m_lobsterAI[i]->setMoveTargetObject(homeBase, 1.0f);
 				}
 			}
 		}
@@ -322,7 +276,7 @@ int main(int argc, char *argv[])
 	app.disableLayer("GroundTypeColliders");
 	app.disableLayer("GroundMoveSpeed");
 	//app.setLayerOpacity("GroundMoveSpeed", 0.7f); 
-	app.setDefaultGame("level1.tmx", "LobsterAI", "DirectMoverAI", 4);
+	app.setDefaultGame("level1.tmx", "LobsterAI", "AutoAttackFlagCarryingBot", 4);
 	//app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "DirectMoverAI", 4);
 //	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", 4);
 //	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", 4);

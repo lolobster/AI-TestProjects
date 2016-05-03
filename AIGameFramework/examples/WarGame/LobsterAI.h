@@ -3,6 +3,7 @@
 
 #include "GameEvents.h"
 #include "PlayerController.h"
+#include "Pathfinding\PathFindingApp.h"
 
 class LobsterAI
 	: public CharacterController
@@ -29,10 +30,42 @@ public:
 		}
 	}
 
+	void setMyHomeBase(GameEnvironmentInfoProvider* environmentInfo, PlayerController* player)
+	{
+		homeBase = environmentInfo->getMyHomeBase(player);
+	}
+
+	const yam2d::GameObject* getMyHomeBase()
+	{
+		return homeBase;
+	}
+
+	void setMoveTargetObject(const yam2d::GameObject* gameObjectToGo, float reachTolerance)
+	{
+		if (gameObjectToGo == 0)
+		{
+			resetMoveTargetObject();
+			return;
+		}
+
+		m_gameObjectToGo = gameObjectToGo;
+		m_reachTolerance = reachTolerance;
+		m_distanceToDestination = slm::length(m_gameObjectToGo->getPosition() - getGameObject()->getPosition());
+		preferPickItem();
+	}
+
+	void resetMoveTargetObject()
+	{
+		m_gameObjectToGo = 0;
+		m_reachTolerance = 0.0f;
+		m_distanceToDestination = 0.0f;
+		stop();
+	}
+
 	// This virtual method is automatically called by map/layer, when update is called from main.cpp
 	virtual void update(float deltaTime)
 	{
-
+		PA->update(deltaTime, m_gameObjectToGo);
 
 		// If has collided to with home base, drop bomb
 		if (m_collisionToHomeBase)
@@ -51,8 +84,14 @@ public:
 	}
 
 private:
+	const yam2d::GameObject* m_gameObjectToGo;
+	float m_reachTolerance;
 	float m_distanceToDestination;
 	bool m_collisionToHomeBase;
+
+	PathFindingApp *PA;
+	const yam2d::GameObject* homeBase;
+
 protected:
 };
 
