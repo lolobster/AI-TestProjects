@@ -284,6 +284,5 @@ int main(int argc, char *argv[])
 	app.setPlayer1Controller(&player1Controller);
 	MyPlayerController player2Controller;
 	app.setPlayer2Controller(&player2Controller);
-
 	return app.run();
 }

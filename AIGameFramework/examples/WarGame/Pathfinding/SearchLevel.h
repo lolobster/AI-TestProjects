@@ -2,8 +2,7 @@
 #define SEARCHLEVEL_H
 #include "Searchnode.h"
 #include <vector>
-#include "Texture.h"
-#include <StreamTexture.h>
+#include "AIMapLayer.h"
 
 class SearchLevel
 {

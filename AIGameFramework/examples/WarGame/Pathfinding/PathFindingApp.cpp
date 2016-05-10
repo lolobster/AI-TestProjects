@@ -2,30 +2,22 @@
 #include "SearchLevel.h"
 #include <Input.h>
 #include <ElapsedTimer.h>
-#include <Text.h>
 #include "../LobsterAI.h"
-
 
 
 PathFindingApp::PathFindingApp()
 {
-
-
 	m_searchCompleted = false;
 	m_searchTimer = 0.0f;
-
+	lobAI->getLobsterAI();
 }
-
-
 
 PathFindingApp::~PathFindingApp()
 {
 }
 
-
 void PathFindingApp::update(float deltaTime, const yam2d::GameObject* target)
 {
-
 	if (deltaTime > 0.1f)
 		deltaTime = 0.1f;
 
@@ -34,7 +26,6 @@ void PathFindingApp::update(float deltaTime, const yam2d::GameObject* target)
 	m_searchTimer = 0.0f;
 
 	m_searchCompleted = false;
-	
 
 	if (!m_searchCompleted)
 	{
@@ -66,7 +57,6 @@ void PathFindingApp::update(float deltaTime, const yam2d::GameObject* target)
 	} // if (!m_searchCompleted)
 
 }
-
 
 bool PathFindingApp::doPathfinding(float startX, float startY, float endX, float endY)
 {

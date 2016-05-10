@@ -13,8 +13,13 @@ public:
 		: CharacterController(owner, gameController, botType)
 		, m_distanceToDestination(0.0f)
 		, m_collisionToHomeBase(false)
-	{}
+	{
+		// tämä ei toimi
+		lobAI = new LobsterAI(owner, gameController, botType);
+	}
 	virtual~LobsterAI(){}
+
+	LobsterAI* getLobsterAI(){ return lobAI; }
 
 	virtual void onMessage(const std::string& msgName, yam2d::Object* eventObject)
 	{
@@ -88,7 +93,7 @@ private:
 	float m_reachTolerance;
 	float m_distanceToDestination;
 	bool m_collisionToHomeBase;
-
+	LobsterAI *lobAI;
 	PathFindingApp *PA;
 	const yam2d::GameObject* homeBase;
 

@@ -1,6 +1,7 @@
 #ifndef PATHFINDING_APP_H_
 #define PATHFINDING_APP_H_
 #include <Object.h>
+#include <GameObject.h>
 #include <es_util.h>
 #include "OpenList.h"
 #include "ClosedList.h"
@@ -17,9 +18,6 @@ public:
 
 	// Updates the app
 	void update(float deltaTime, const yam2d::GameObject* target);
-
-	// Draws the app
-	void render(yam2d::ESContext *ctx);
 
 // Private member variables and methods:
 private:

@@ -19,10 +19,12 @@ float SearchLevel::GetH(const Position &fromPos, const Position &toPos)
 // tänne colliderin tiedot
 bool SearchLevel::isWalkable(int posX, int posY)
 {
-	if (posX < 0 || posY < 0 || posX >= inputTexture->getWidth() || posY >= inputTexture->getHeight())
+	AIMapLayer *map;
+
+	if (posX < 0 || posY < 0 || posX >= map->getWidth() || posY >= map->getHeight())
 		return false;
-	unsigned char* pixel = inputTexture->getPixel(posX, posY);
-	return !isNotWalkable;
+	unsigned char* pixel = map->getPixel(posX, posY);
+	return true;
 }
 
 std::vector<Position> SearchLevel::GetAdjacentNodes(int posX, int posY)
