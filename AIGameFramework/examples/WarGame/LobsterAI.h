@@ -16,9 +16,11 @@ public:
 	{
 		// tämä ei toimi
 		lobAI = new LobsterAI(owner, gameController, botType);
+		startPos = owner->getPosition();
 	}
 	virtual~LobsterAI(){}
 
+	yam2d::vec2 getStartPosition(){ return startPos; }
 	LobsterAI* getLobsterAI(){ return lobAI; }
 
 	virtual void onMessage(const std::string& msgName, yam2d::Object* eventObject)
@@ -93,6 +95,7 @@ private:
 	float m_reachTolerance;
 	float m_distanceToDestination;
 	bool m_collisionToHomeBase;
+	yam2d::vec2 startPos;
 	LobsterAI *lobAI;
 	PathFindingApp *PA;
 	const yam2d::GameObject* homeBase;

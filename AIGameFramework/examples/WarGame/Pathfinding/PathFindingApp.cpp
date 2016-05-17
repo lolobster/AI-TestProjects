@@ -32,8 +32,8 @@ void PathFindingApp::update(float deltaTime, const yam2d::GameObject* target)
 		// Find start and end
 		
 		float startX, startY, endX, endY;
-		startX = lobAI->getMyHomeBase()->getPosition().x;
-		startY = lobAI->getMyHomeBase()->getPosition().y;
+		startX = lobAI->getStartPosition().x;
+		startY = lobAI->getStartPosition().y;
 		endX = target->getPosition().x;
 		endY = target->getPosition().y;
 

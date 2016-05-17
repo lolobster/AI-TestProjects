@@ -9,18 +9,22 @@
 #define AI_MAP_LAYER_H_
 
 #include <Texture.h>
+#include <Layer.h>
 #include <stdint.h>
+
 class AIMapLayer
 {
+private:
+	yam2d::Layer* m_layer;
 protected:
-	AIMapLayer()
+	AIMapLayer(yam2d::Layer* layer)
+		: m_layer(layer)
 	{
 	}
 
 	virtual ~AIMapLayer()
 	{
 	}
-
 
 public:
 	virtual void setPixel(int px, int py, float value) = 0;
@@ -34,6 +38,11 @@ public:
 	{
 		return getPixel((int)(pos.x + 0.5f), (int)(pos.y + 0.5f));
 	}*/
+
+	yam2d::Layer* getLayer() const
+	{
+		return m_layer;
+	}
 
 	const uint8_t* getPixelFromPos(const slm::vec2& pos) const
 	{

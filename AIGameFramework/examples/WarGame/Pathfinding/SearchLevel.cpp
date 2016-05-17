@@ -19,11 +19,12 @@ float SearchLevel::GetH(const Position &fromPos, const Position &toPos)
 // tänne colliderin tiedot
 bool SearchLevel::isWalkable(int posX, int posY)
 {
-	AIMapLayer *map;
+	AIMapLayer *layer;
+	layer->getLayer();
 
-	if (posX < 0 || posY < 0 || posX >= map->getWidth() || posY >= map->getHeight())
+	if (posX < 0 || posY < 0 || posX >= layer->getWidth() || posY >= layer->getHeight())
 		return false;
-	unsigned char* pixel = map->getPixel(posX, posY);
+	unsigned char* pixel = layer->getPixel(posX, posY);
 	return true;
 }
 

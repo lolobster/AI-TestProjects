@@ -13,28 +13,25 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Pathfinding">
-      <UniqueIdentifier>{067ae713-146d-48c1-ba20-57f559a6c73a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pathfinding\ClosedList.cpp">
-      <Filter>Pathfinding</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pathfinding\OpenList.cpp">
-      <Filter>Pathfinding</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pathfinding\PathFindingApp.cpp">
-      <Filter>Pathfinding</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pathfinding\SearchLevel.cpp">
-      <Filter>Pathfinding</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pathfinding\SearchNode.cpp">
-      <Filter>Pathfinding</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,19 +42,19 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pathfinding\ClosedList.h">
-      <Filter>Pathfinding</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pathfinding\OpenList.h">
-      <Filter>Pathfinding</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pathfinding\PathFindingApp.h">
-      <Filter>Pathfinding</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pathfinding\SearchLevel.h">
-      <Filter>Pathfinding</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pathfinding\SearchNode.h">
-      <Filter>Pathfinding</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
