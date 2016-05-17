@@ -11,16 +11,17 @@ class LobsterAI
 public:
 	LobsterAI(yam2d::GameObject* owner, GameController* gameController, BotType botType)
 		: CharacterController(owner, gameController, botType)
+		, m_gameObjectToGo(0)
+		, m_reachTolerance(0.0f)
 		, m_distanceToDestination(0.0f)
 		, m_collisionToHomeBase(false)
+		, m_startPos(0.0f, 0.0f)
 	{
-		// tämä ei toimi
-		lobAI = new LobsterAI(owner, gameController, botType);
-		startPos = owner->getPosition();
+		m_startPos = owner->getPosition();
 	}
 	virtual~LobsterAI(){}
 
-	yam2d::vec2 getStartPosition(){ return startPos; }
+	yam2d::vec2 getStartPosition(){ return m_startPos; }
 	LobsterAI* getLobsterAI(){ return lobAI; }
 
 	virtual void onMessage(const std::string& msgName, yam2d::Object* eventObject)
@@ -72,16 +73,19 @@ public:
 	// This virtual method is automatically called by map/layer, when update is called from main.cpp
 	virtual void update(float deltaTime)
 	{
-		PA->update(deltaTime, m_gameObjectToGo);
-
-		// If has collided to with home base, drop bomb
-		if (m_collisionToHomeBase)
+		if (m_gameObjectToGo)
 		{
-			// Only if I has flag
-			if (hasItem())
-				dropItem1();
+			PA->update(deltaTime, m_startPos, m_gameObjectToGo);
 
-			m_collisionToHomeBase = false;
+			// If has collided to with home base, drop bomb
+			if (m_collisionToHomeBase)
+			{
+				// Only if I has flag
+				if (hasItem())
+					dropItem1();
+
+				m_collisionToHomeBase = false;
+			}
 		}
 	}
 
@@ -95,7 +99,7 @@ private:
 	float m_reachTolerance;
 	float m_distanceToDestination;
 	bool m_collisionToHomeBase;
-	yam2d::vec2 startPos;
+	yam2d::vec2 m_startPos;
 	LobsterAI *lobAI;
 	PathFindingApp *PA;
 	const yam2d::GameObject* homeBase;

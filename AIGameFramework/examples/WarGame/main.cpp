@@ -22,7 +22,6 @@ private:
 	std::vector< yam2d::Ref<DirectMoverAI> > m_directMoverAIControllers;
 	std::vector< yam2d::Ref<AutoAttackFlagCarryingBot> > m_autoAttackFlagCarryingBots;
 
-	LobsterAI* lobster;
 public:
 	MyPlayerController()
 		: PlayerController()
@@ -59,7 +58,7 @@ public:
 
 		if (playerName == "LobsterAI")
 		{
-			lobster = new LobsterAI(ownerGameObject, gameController, type);
+			LobsterAI* lobster = new LobsterAI(ownerGameObject, gameController, type);
 			m_lobsterAI.push_back(lobster);
 			return lobster;
 		}
@@ -90,7 +89,6 @@ public:
 		{
 			m_directMoverAIControllers[i]->setMoveTargetObject(dynamite, 1.0f);
 		}
-
 
 		for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 		{

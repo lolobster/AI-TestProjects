@@ -7,7 +7,6 @@
 #include "ClosedList.h"
 #include "SearchLevel.h"
 
-class LobsterAI;
 
 class PathFindingApp : public yam2d::Object
 {
@@ -17,11 +16,10 @@ public:
 	virtual ~PathFindingApp();
 
 	// Updates the app
-	void update(float deltaTime, const yam2d::GameObject* target);
+	void update(float deltaTime, const yam2d::vec2 startPos, const yam2d::GameObject* target);
 
 // Private member variables and methods:
 private:
-	LobsterAI *lobAI;
 	
 	bool m_searchCompleted;
 	float m_searchTimer;
