@@ -93,13 +93,18 @@ public:
 		return m_distanceToDestination;
 	}
 
+	void setApp(PathFindingApp* pathApp)
+	{
+		pApp = pathApp;
+	}
+
 private:
 	const yam2d::GameObject* m_gameObjectToGo;
 	float m_reachTolerance;
 	float m_distanceToDestination;
 	bool m_collisionToHomeBase;
 	yam2d::vec2 m_startPos;
-	PathFindingApp * pApp = new PathFindingApp();
+	PathFindingApp * pApp;
 	const yam2d::GameObject* homeBase;
 
 protected:

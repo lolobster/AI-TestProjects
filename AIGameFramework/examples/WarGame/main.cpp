@@ -20,16 +20,18 @@ private:
 	std::vector< yam2d::Ref<JoystickController> > m_joystickControllers;
 	std::vector< yam2d::Ref<DirectMoverAI> > m_directMoverAIControllers;
 	std::vector< yam2d::Ref<AutoAttackFlagCarryingBot> > m_autoAttackFlagCarryingBots;
-	PathFindingApp app;
+	PathFindingApp *app;
 	AIMapLayer *AIMap;
 public:
 	MyPlayerController()
 		: PlayerController()
 	{
+		app = new PathFindingApp();
 	}
 
 	virtual ~MyPlayerController()
 	{
+		delete app;
 	}
 
 
@@ -59,6 +61,7 @@ public:
 		if (playerName == "LobsterAI")
 		{
 			LobsterAI* lobster = new LobsterAI(ownerGameObject, gameController, type);
+			lobster->setApp(app);
 			m_lobsterAI.push_back(lobster);
 			return lobster;
 		}
@@ -103,7 +106,7 @@ public:
 
 		// Pass this to pathfinding app
 		AIMap = environmentInfo->getAILayer("GroundMoveSpeed");
-		app.setMapLayer(AIMap);
+		app->setMapLayer(AIMap);
 	}
 
 
