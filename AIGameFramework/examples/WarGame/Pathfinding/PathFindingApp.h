@@ -14,9 +14,9 @@ class PathFindingApp : public yam2d::Object
 public:
 	PathFindingApp();
 	virtual ~PathFindingApp();
-
+	std::vector<slm::vec2> doPathfinding(float startX, float startY, float endX, float endY);
 	// Updates the app
-	void update(float deltaTime, const yam2d::vec2 startPos, const yam2d::GameObject* target);
+	//void update(float deltaTime, const yam2d::vec2 startPos, const yam2d::GameObject* target);
 	void setMapLayer(AIMapLayer* layer)
 	{
 		mapLayer = layer; 
@@ -26,8 +26,6 @@ private:
 	AIMapLayer* mapLayer;
 	bool m_searchCompleted;
 	float m_searchTimer;
-
-	bool doPathfinding(float startX, float startY, float endX, float endY);
 
 	// Hidden copy constructor and assignment operator.
 	PathFindingApp(const PathFindingApp&);

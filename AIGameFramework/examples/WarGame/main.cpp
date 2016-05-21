@@ -21,7 +21,7 @@ private:
 	std::vector< yam2d::Ref<DirectMoverAI> > m_directMoverAIControllers;
 	std::vector< yam2d::Ref<AutoAttackFlagCarryingBot> > m_autoAttackFlagCarryingBots;
 	PathFindingApp *app;
-	AIMapLayer *AIMap;
+
 public:
 	MyPlayerController()
 		: PlayerController()
@@ -98,15 +98,15 @@ public:
 		uint8_t BLUE_PIXEL[4] = { 0x00, 0x00, 0xff, 0xff };
 		uint8_t TP_PIXEL[4] = { 0x00, 0x00, 0x00, 0x00 };  // TransParent
 
+		std::vector<slm::vec2> targets;
+		// Pass this to pathfinding app
+		AIMapLayer *AIMap = environmentInfo->getAILayer("GroundMoveSpeed");
+		app->setMapLayer(AIMap);
 
 		for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 		{
 			m_lobsterAI[i]->setMoveTargetObject(dynamite, 1.0f);
 		}
-
-		// Pass this to pathfinding app
-		AIMap = environmentInfo->getAILayer("GroundMoveSpeed");
-		app->setMapLayer(AIMap);
 	}
 
 

@@ -16,6 +16,7 @@ public:
 		, m_distanceToDestination(0.0f)
 		, m_collisionToHomeBase(false)
 		, m_startPos(0.0f, 0.0f)
+		, AIObject(owner)
 	{
 		m_startPos = owner->getPosition();
 	}
@@ -47,6 +48,17 @@ public:
 		return homeBase;
 	}
 
+	void clearTargets()
+	{
+		targets.clear();
+	}
+
+	void findPath()
+	{
+		targets = pApp->doPathfinding(AIObject->getPosition().x, AIObject->getPosition().y,
+			m_gameObjectToGo->getPosition().x, m_gameObjectToGo->getPosition().y);
+	}
+
 	void setMoveTargetObject(const yam2d::GameObject* gameObjectToGo, float reachTolerance)
 	{
 		if (gameObjectToGo == 0)
@@ -57,6 +69,7 @@ public:
 
 		m_gameObjectToGo = gameObjectToGo;
 		m_reachTolerance = reachTolerance;
+		findPath();
 		m_distanceToDestination = slm::length(m_gameObjectToGo->getPosition() - getGameObject()->getPosition());
 		preferPickItem();
 	}
@@ -72,11 +85,14 @@ public:
 	// This virtual method is automatically called by map/layer, when update is called from main.cpp
 	virtual void update(float deltaTime)
 	{
-		if (m_gameObjectToGo)
-		{
-			pApp->update(deltaTime, m_startPos, m_gameObjectToGo);
+		CharacterController::update(deltaTime);
 
-			// If has collided to with home base, drop bomb
+		if (m_gameObjectToGo != 0 && !targets.empty())
+		{
+			slm::vec2 position(targets.back().x, targets.back().y);
+			m_distanceToDestination = moveDirectToPosition(position, m_reachTolerance);
+			
+			// If has collided with home base, drop bomb
 			if (m_collisionToHomeBase)
 			{
 				// Only if I has flag
@@ -86,6 +102,8 @@ public:
 				m_collisionToHomeBase = false;
 			}
 		}
+		if (m_distanceToDestination <= m_reachTolerance && !targets.empty())
+			targets.pop_back();
 	}
 
 	float getDistanceToDestination() const
@@ -104,8 +122,10 @@ private:
 	float m_distanceToDestination;
 	bool m_collisionToHomeBase;
 	yam2d::vec2 m_startPos;
+	std::vector<slm::vec2> targets;
 	PathFindingApp * pApp;
 	const yam2d::GameObject* homeBase;
+	const yam2d::GameObject* AIObject;
 
 protected:
 };
