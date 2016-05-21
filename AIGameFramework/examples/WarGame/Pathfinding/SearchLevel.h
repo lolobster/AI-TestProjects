@@ -3,11 +3,12 @@
 #include "Searchnode.h"
 #include <vector>
 #include "AIMapLayer.h"
+#include "Layer.h"
 
 class SearchLevel
 {
 public:
-	SearchLevel(){}
+	SearchLevel(AIMapLayer *layer) : AIlayer(layer){};
 	~SearchLevel(){};
 
 	float GetG(SearchNode* fromNode, const Position& toPos);
@@ -17,6 +18,7 @@ public:
 	std::vector<Position> GetAdjacentNodes(int posX, int posY);
 
 private:
+	AIMapLayer *AIlayer;
 };
 
 #endif

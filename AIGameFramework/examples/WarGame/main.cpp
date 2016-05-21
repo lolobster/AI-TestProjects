@@ -11,7 +11,6 @@
 #include "LobsterAI.h"
 #include "JoystickController.h"
 
-#include <Layer.h>
 
 class MyPlayerController : public PlayerController
 {
@@ -21,7 +20,8 @@ private:
 	std::vector< yam2d::Ref<JoystickController> > m_joystickControllers;
 	std::vector< yam2d::Ref<DirectMoverAI> > m_directMoverAIControllers;
 	std::vector< yam2d::Ref<AutoAttackFlagCarryingBot> > m_autoAttackFlagCarryingBots;
-
+	PathFindingApp app;
+	AIMapLayer *AIMap;
 public:
 	MyPlayerController()
 		: PlayerController()
@@ -90,30 +90,20 @@ public:
 			m_directMoverAIControllers[i]->setMoveTargetObject(dynamite, 1.0f);
 		}
 
+		uint8_t RED_PIXEL[4] = { 0xff, 0x00, 0x00, 0xff };
+		uint8_t GREEN_PIXEL[4] = { 0x00, 0xff, 0x00, 0xff };
+		uint8_t BLUE_PIXEL[4] = { 0x00, 0x00, 0xff, 0xff };
+		uint8_t TP_PIXEL[4] = { 0x00, 0x00, 0x00, 0x00 };  // TransParent
+
+
 		for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 		{
 			m_lobsterAI[i]->setMoveTargetObject(dynamite, 1.0f);
 		}
-		/*
-		AIMapLayer* speedMap = environmentInfo->getAILayer("MyLayer");
-		speedMap->getLayer()->setOpacity(0.5f);
 
-		for (size_t y = 0; y < speedMap->getHeight(); ++y)
-		{
-		for (size_t x = 0; x < speedMap->getWidth(); ++x)
-		{
-		if (x == y)
-		{
-		//uint8_t p[4] = { 0xff, 0xff, 0xff, 0xff };
-		float d = x*y;
-		float d1 = speedMap->getHeight()*speedMap->getWidth();
-
-		speedMap->setPixel(x, y, d/d1);
-		}
-		}
-		}*/
-		//7	const uint8_t* pixel = speedMap->getPixelFromPos( slm::vec2(20.2f,17.4f) );
-		//	int value = pixel[0];
+		// Pass this to pathfinding app
+		AIMap = environmentInfo->getAILayer("GroundMoveSpeed");
+		app.setMapLayer(AIMap);
 	}
 
 
@@ -299,9 +289,9 @@ int main(int argc, char *argv[])
 	//app.disableLayer("Ground");
 	app.disableLayer("ObjectSpawns");
 	app.disableLayer("GroundTypeColliders");
-	app.disableLayer("GroundMoveSpeed");
+	//app.disableLayer("GroundMoveSpeed");
 	//app.setLayerOpacity("DebugLayer", 0.7f); 
-	//app.setLayerOpacity("GroundMoveSpeed", 0.7f); 
+	app.setLayerOpacity("GroundMoveSpeed", 0.5f); 
 	//app.setDefaultGame("level1.tmx", "MyAI", "DirectMoverAI", 4);
 	app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "LobsterAI", "Mie", 4);
 	//	app.setDefaultGame("Level1.tmx", "AutoAttackFlagCarryingBot", "JoystickController", "YourNameHere", 4);

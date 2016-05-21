@@ -48,7 +48,7 @@ void PathFindingApp::update(float deltaTime, const yam2d::vec2 startPos, const y
 
 		if (m_searchCompleted)
 		{
-			printf_s("Path find done. Time spent %.3f seconds");
+			printf_s("Pathfinding  done. Time spent %.3f seconds");
 		}
 	} // if (!m_searchCompleted)
 
@@ -61,7 +61,7 @@ bool PathFindingApp::doPathfinding(float startX, float startY, float endX, float
 	// Some variables for path finding
 	OpenList openList;
 	ClosedList closedList;
-	SearchLevel searchLevel;
+	SearchLevel searchLevel(mapLayer);
 	SearchNode* result = 0;
 
 	// Start A* search:

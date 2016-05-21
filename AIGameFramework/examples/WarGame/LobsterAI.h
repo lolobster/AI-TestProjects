@@ -22,7 +22,6 @@ public:
 	virtual~LobsterAI(){}
 
 	yam2d::vec2 getStartPosition(){ return m_startPos; }
-	LobsterAI* getLobsterAI(){ return lobAI; }
 
 	virtual void onMessage(const std::string& msgName, yam2d::Object* eventObject)
 	{
@@ -75,7 +74,7 @@ public:
 	{
 		if (m_gameObjectToGo)
 		{
-			PA->update(deltaTime, m_startPos, m_gameObjectToGo);
+			pApp->update(deltaTime, m_startPos, m_gameObjectToGo);
 
 			// If has collided to with home base, drop bomb
 			if (m_collisionToHomeBase)
@@ -100,8 +99,7 @@ private:
 	float m_distanceToDestination;
 	bool m_collisionToHomeBase;
 	yam2d::vec2 m_startPos;
-	LobsterAI *lobAI;
-	PathFindingApp *PA;
+	PathFindingApp * pApp = new PathFindingApp();
 	const yam2d::GameObject* homeBase;
 
 protected:

@@ -17,10 +17,13 @@ public:
 
 	// Updates the app
 	void update(float deltaTime, const yam2d::vec2 startPos, const yam2d::GameObject* target);
-
+	void setMapLayer(AIMapLayer* layer)
+	{
+		mapLayer = layer; 
+	}
 // Private member variables and methods:
 private:
-	
+	AIMapLayer* mapLayer;
 	bool m_searchCompleted;
 	float m_searchTimer;
 
