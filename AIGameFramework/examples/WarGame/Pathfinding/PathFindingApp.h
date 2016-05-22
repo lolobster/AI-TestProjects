@@ -6,7 +6,7 @@
 #include "OpenList.h"
 #include "ClosedList.h"
 #include "SearchLevel.h"
-
+class GameEnvironmentInfoProvider;
 
 class PathFindingApp : public yam2d::Object
 {
@@ -21,9 +21,15 @@ public:
 	{
 		mapLayer = layer; 
 	}
+	void setEnvironmentInfo(GameEnvironmentInfoProvider* envInfo)
+	{
+		environmentInfo = envInfo;
+	}
+	GameEnvironmentInfoProvider* getEnvironmentInfo(){ return environmentInfo; }
 // Private member variables and methods:
 private:
 	AIMapLayer* mapLayer;
+	GameEnvironmentInfoProvider* environmentInfo;
 	bool m_searchCompleted;
 	float m_searchTimer;
 

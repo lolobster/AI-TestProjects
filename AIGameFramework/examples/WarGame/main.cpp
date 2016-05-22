@@ -21,6 +21,7 @@ private:
 	std::vector< yam2d::Ref<DirectMoverAI> > m_directMoverAIControllers;
 	std::vector< yam2d::Ref<AutoAttackFlagCarryingBot> > m_autoAttackFlagCarryingBots;
 	PathFindingApp *app;
+	LobsterAI* lobster;
 
 public:
 	MyPlayerController()
@@ -60,9 +61,10 @@ public:
 
 		if (playerName == "LobsterAI")
 		{
-			LobsterAI* lobster = new LobsterAI(ownerGameObject, gameController, type);
+			lobster = new LobsterAI(ownerGameObject, gameController, type);
 			lobster->setApp(app);
 			m_lobsterAI.push_back(lobster);
+			lobster->setPlayerController(this);
 			return lobster;
 		}
 
@@ -102,7 +104,10 @@ public:
 		// Pass this to pathfinding app
 		AIMapLayer *AIMap = environmentInfo->getAILayer("GroundMoveSpeed");
 		app->setMapLayer(AIMap);
-
+		app->setEnvironmentInfo(environmentInfo);
+		//lobster->setMyHomeBase(environmentInfo, this);
+		//lobster->setEnemyBase(environmentInfo, this);
+		
 		for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 		{
 			m_lobsterAI[i]->setMoveTargetObject(dynamite, 1.0f);
@@ -201,6 +206,10 @@ public:
 				{
 					m_directMoverAIControllers[i]->setMoveTargetObject(homeBase, 1.0f);
 				}
+				for (size_t i = 0; i < m_lobsterAI.size(); ++i)
+				{
+					m_lobsterAI[i]->setMoveTargetObject(homeBase, 1.0f);
+				}
 			}
 			else
 			{
@@ -211,6 +220,12 @@ public:
 				{
 					m_directMoverAIControllers[i]->setMoveTargetObject(homeBase, 1.0f);
 					m_directMoverAIControllers[i]->stop();
+				}
+				for (size_t i = 0; i < m_lobsterAI.size(); ++i)
+				{
+					m_lobsterAI[i]->setShootTarget(itemEvent->getCharacterController()->getGameObject(), 1.9f, 0.05f);
+					//m_lobsterAI[i]->setMoveTargetObject(homeBase, 1.0f);
+					m_lobsterAI[i]->stop();
 				}
 			}
 		}
@@ -294,9 +309,9 @@ int main(int argc, char *argv[])
 	app.disableLayer("GroundTypeColliders");
 	//app.disableLayer("GroundMoveSpeed");
 	//app.setLayerOpacity("DebugLayer", 0.7f); 
-	app.setLayerOpacity("GroundMoveSpeed", 0.5f); 
+	app.setLayerOpacity("GroundMoveSpeed", 0.0f); 
 	//app.setDefaultGame("level1.tmx", "MyAI", "DirectMoverAI", 4);
-	app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "LobsterAI", "Mie", 4);
+	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "LobsterAI", "Mie", 4);
 	//	app.setDefaultGame("Level1.tmx", "AutoAttackFlagCarryingBot", "JoystickController", "YourNameHere", 4);
 	//	app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "DirectMoverAI", "YourNameHere", 4);
 	//	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", "YourNameHere", 4);

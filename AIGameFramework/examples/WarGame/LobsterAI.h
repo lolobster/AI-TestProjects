@@ -12,11 +12,17 @@ public:
 	LobsterAI(yam2d::GameObject* owner, GameController* gameController, BotType botType)
 		: CharacterController(owner, gameController, botType)
 		, m_gameObjectToGo(0)
+		, homeBase(0)
+		, enemyBase(0)
 		, m_reachTolerance(0.0f)
 		, m_distanceToDestination(0.0f)
 		, m_collisionToHomeBase(false)
 		, m_startPos(0.0f, 0.0f)
 		, AIObject(owner)
+		, shootTarget(0)
+		, m_predictionDistance(0.0f)
+		, m_aimTolerance(0.0f)
+		, player(0)
 	{
 		m_startPos = owner->getPosition();
 	}
@@ -26,26 +32,64 @@ public:
 
 	virtual void onMessage(const std::string& msgName, yam2d::Object* eventObject)
 	{
+		setMyHomeBase();
+		setEnemyBase();
 		CollisionEvent* collisionEvent = dynamic_cast<CollisionEvent*>(eventObject);
 		assert(collisionEvent != 0);
 		assert(collisionEvent->getMyGameObject() == getGameObject());
 		yam2d::GameObject* otherGo = collisionEvent->getOtherGameObject();
 		std::string otherType = otherGo->getType();
+
 		if (otherType == "HomeBase")
 		{
 			if (hasItem())
 				dropItem1();
 		}
+		if (otherType == "Dynamite")
+		{
+			
+			// set new target to Enemy Base 
+			printf("Reached Dynamite!\n\n");
+			// also, actually PICK UP the bomb
+			setMoveTargetObject(getEnemyBase(), 1.0f);
+		}
+
+		if (msgName == "TakingDamage")
+		{
+			// Shoot back
+			printf("Taking damage!\n\n");
+			//setShootTarget();
+		}
+		if (msgName == "ZeroHealth")
+		{ 
+			printf("A soldier died!\n\n");
+		}
+
 	}
 
-	void setMyHomeBase(GameEnvironmentInfoProvider* environmentInfo, PlayerController* player)
+	void setPlayerController(PlayerController* playerController)
 	{
-		homeBase = environmentInfo->getMyHomeBase(player);
+		player = playerController;
+	}
+
+	void setMyHomeBase()
+	{
+		homeBase = pApp->getEnvironmentInfo()->getMyHomeBase(player);
+
+	}
+
+	void setEnemyBase()
+	{
+		enemyBase = pApp->getEnvironmentInfo()->getEnemyHomeBase(player);
 	}
 
 	const yam2d::GameObject* getMyHomeBase()
 	{
 		return homeBase;
+	}
+	const yam2d::GameObject* getEnemyBase()
+	{
+		return enemyBase;
 	}
 
 	void clearTargets()
@@ -101,9 +145,32 @@ public:
 
 				m_collisionToHomeBase = false;
 			}
+
+			if (shootTarget != 0)
+			{
+				float rotation = shootTarget->getRotation();
+				yam2d::vec2 enemyDir;
+				enemyDir.x = cosf(rotation);
+				enemyDir.y = sinf(rotation);
+				autoUsePrimaryWeapon(shootTarget->getPosition() + m_predictionDistance * enemyDir, m_aimTolerance);
+			}
 		}
 		if (m_distanceToDestination <= m_reachTolerance && !targets.empty())
 			targets.pop_back();
+	}
+
+	void setShootTarget(yam2d::GameObject* targetToShoot, float predictionDistance, float aimTolerance)
+	{
+		shootTarget = targetToShoot;
+		m_predictionDistance = predictionDistance;
+		m_aimTolerance = aimTolerance;
+	}
+
+	void resetShootTarget()
+	{
+		shootTarget = 0;
+		m_predictionDistance = 0.0f;
+		m_aimTolerance = 0.0f;
 	}
 
 	float getDistanceToDestination() const
@@ -120,13 +187,17 @@ private:
 	const yam2d::GameObject* m_gameObjectToGo;
 	float m_reachTolerance;
 	float m_distanceToDestination;
+	float m_predictionDistance;
+	float m_aimTolerance;
 	bool m_collisionToHomeBase;
 	yam2d::vec2 m_startPos;
 	std::vector<slm::vec2> targets;
 	PathFindingApp * pApp;
 	const yam2d::GameObject* homeBase;
+	const yam2d::GameObject* enemyBase;
 	const yam2d::GameObject* AIObject;
-
+	const yam2d::GameObject* shootTarget;
+	PlayerController* player;
 protected:
 };
 
