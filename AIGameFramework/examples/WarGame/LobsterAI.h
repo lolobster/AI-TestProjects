@@ -23,6 +23,7 @@ public:
 		, m_predictionDistance(0.0f)
 		, m_aimTolerance(0.0f)
 		, player(0)
+		, newTarget(false)
 	{
 		m_startPos = owner->getPosition();
 	}
@@ -34,6 +35,7 @@ public:
 	{
 		setMyHomeBase();
 		setEnemyBase();
+
 		CollisionEvent* collisionEvent = dynamic_cast<CollisionEvent*>(eventObject);
 		assert(collisionEvent != 0);
 		assert(collisionEvent->getMyGameObject() == getGameObject());
@@ -43,11 +45,14 @@ public:
 		if (otherType == "HomeBase")
 		{
 			if (hasItem())
+			{
+				printf("Dropping bomb!\n\n");
 				dropItem1();
+				stop();
+			}
 		}
 		if (otherType == "Dynamite")
 		{
-			
 			// set new target to Enemy Base 
 			printf("Reached Dynamite!\n\n");
 			// also, actually PICK UP the bomb
@@ -75,7 +80,6 @@ public:
 	void setMyHomeBase()
 	{
 		homeBase = pApp->getEnvironmentInfo()->getMyHomeBase(player);
-
 	}
 
 	void setEnemyBase()
@@ -99,8 +103,12 @@ public:
 
 	void findPath()
 	{
-		targets = pApp->doPathfinding(AIObject->getPosition().x, AIObject->getPosition().y,
-			m_gameObjectToGo->getPosition().x, m_gameObjectToGo->getPosition().y);
+		if (newTarget)
+		{
+			targets = pApp->doPathfinding(AIObject->getPosition().x, AIObject->getPosition().y,
+				m_gameObjectToGo->getPosition().x, m_gameObjectToGo->getPosition().y);
+		}
+		newTarget = false;
 	}
 
 	void setMoveTargetObject(const yam2d::GameObject* gameObjectToGo, float reachTolerance)
@@ -110,16 +118,21 @@ public:
 			resetMoveTargetObject();
 			return;
 		}
-
-		m_gameObjectToGo = gameObjectToGo;
-		m_reachTolerance = reachTolerance;
-		findPath();
-		m_distanceToDestination = slm::length(m_gameObjectToGo->getPosition() - getGameObject()->getPosition());
+		if (m_gameObjectToGo != gameObjectToGo)
+		{
+			newTarget = true;
+			m_gameObjectToGo = gameObjectToGo;
+			m_reachTolerance = reachTolerance;
+			findPath();
+			m_distanceToDestination = slm::length(m_gameObjectToGo->getPosition() - getGameObject()->getPosition());
+		}
 		preferPickItem();
+
 	}
 
 	void resetMoveTargetObject()
 	{
+		newTarget = false;
 		m_gameObjectToGo = 0;
 		m_reachTolerance = 0.0f;
 		m_distanceToDestination = 0.0f;
@@ -135,16 +148,6 @@ public:
 		{
 			slm::vec2 position(targets.back().x, targets.back().y);
 			m_distanceToDestination = moveDirectToPosition(position, m_reachTolerance);
-			
-			// If has collided with home base, drop bomb
-			if (m_collisionToHomeBase)
-			{
-				// Only if I has flag
-				if (hasItem())
-					dropItem1();
-
-				m_collisionToHomeBase = false;
-			}
 
 			if (shootTarget != 0)
 			{
@@ -198,6 +201,7 @@ private:
 	const yam2d::GameObject* AIObject;
 	const yam2d::GameObject* shootTarget;
 	PlayerController* player;
+	bool newTarget;
 protected:
 };
 

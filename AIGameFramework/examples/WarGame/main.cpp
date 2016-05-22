@@ -225,7 +225,7 @@ public:
 				{
 					m_lobsterAI[i]->setShootTarget(itemEvent->getCharacterController()->getGameObject(), 1.9f, 0.05f);
 					//m_lobsterAI[i]->setMoveTargetObject(homeBase, 1.0f);
-					m_lobsterAI[i]->stop();
+					//m_lobsterAI[i]->stop();
 				}
 			}
 		}
@@ -240,6 +240,10 @@ public:
 				m_autoAttackFlagCarryingBots[i]->resetTargetToShoot();
 			}
 
+			for (size_t i = 0; i < m_lobsterAI.size(); ++i)
+			{
+				m_lobsterAI[i]->resetShootTarget();
+			}
 
 			// Item propped.
 			// Start going straight to dynamite
@@ -311,7 +315,7 @@ int main(int argc, char *argv[])
 	//app.setLayerOpacity("DebugLayer", 0.7f); 
 	app.setLayerOpacity("GroundMoveSpeed", 0.0f); 
 	//app.setDefaultGame("level1.tmx", "MyAI", "DirectMoverAI", 4);
-	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "LobsterAI", "Mie", 4);
+	app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "LobsterAI", "Mie", 4);
 	//	app.setDefaultGame("Level1.tmx", "AutoAttackFlagCarryingBot", "JoystickController", "YourNameHere", 4);
 	//	app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "DirectMoverAI", "YourNameHere", 4);
 	//	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", "YourNameHere", 4);
