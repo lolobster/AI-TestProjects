@@ -110,7 +110,10 @@ public:
 		
 		for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 		{
-			m_lobsterAI[i]->setMoveTargetObject(dynamite, 1.0f);
+			if (m_lobsterAI[i]->isSoldier())
+				m_lobsterAI[i]->setMoveTargetObject(dynamite, 1.0f);
+			else if (m_lobsterAI[i]->isRobot())
+				m_lobsterAI[i]->setMoveTargetObject(environmentInfo->getMyHomeBase(this), 1.0f);
 		}
 	}
 
@@ -127,6 +130,12 @@ public:
 		for (size_t i = 0; i < m_autoAttackFlagCarryingBots.size(); ++i)
 		{
 			m_autoAttackFlagCarryingBots[i]->resetTargetToShoot();
+		}
+
+		for (size_t i = 0; i < m_lobsterAI.size(); i++)
+		{
+			m_lobsterAI[i]->resetShootTarget();
+			m_lobsterAI[i]->resetMoveTargetObject();
 		}
 	}
 
@@ -154,6 +163,8 @@ public:
 	//		eventObject: yam2d::GameObject* = object which was dropped  (Dynamite).
 	virtual void onGameEvent(GameEnvironmentInfoProvider* environmentInfo, const std::string& eventName, yam2d::Object* eventObject)
 	{
+		const yam2d::GameObject* dynamite = environmentInfo->getDynamite();
+
 		if (eventName == "ObjectSpawned" || eventName == "ObjectDeleted")
 		{
 			yam2d::GameObject* gameObject = dynamic_cast<yam2d::GameObject*>(eventObject);
@@ -196,6 +207,10 @@ public:
 				m_autoAttackFlagCarryingBots[i]->setTargetToShoot(itemEvent->getCharacterController()->getGameObject(), 1.9f, 0.05f);
 			}
 
+			for (size_t i = 0; i < m_lobsterAI.size(); ++i)
+			{
+				m_lobsterAI[i]->setShootTarget(itemEvent->getCharacterController()->getGameObject(), 1.5f, 0.05f);
+			}
 
 			if (teamIndex == getMyTeamIndex())
 			{
@@ -223,7 +238,7 @@ public:
 				}
 				for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 				{
-					m_lobsterAI[i]->setShootTarget(itemEvent->getCharacterController()->getGameObject(), 1.9f, 0.05f);
+					m_lobsterAI[i]->setShootTarget(itemEvent->getCharacterController()->getGameObject(), 1.0f, 0.05f);
 					//m_lobsterAI[i]->setMoveTargetObject(homeBase, 1.0f);
 					//m_lobsterAI[i]->stop();
 				}
@@ -243,11 +258,11 @@ public:
 			for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 			{
 				m_lobsterAI[i]->resetShootTarget();
+				m_lobsterAI[i]->setMoveTargetObject(dynamite, 1.0f);
 			}
 
-			// Item propped.
+			// Item dropped.
 			// Start going straight to dynamite
-			const yam2d::GameObject* dynamite = environmentInfo->getDynamite();
 			for (size_t i = 0; i < m_directMoverAIControllers.size(); ++i)
 			{
 				m_directMoverAIControllers[i]->setMoveTargetObject(dynamite, 1.0f);
@@ -315,7 +330,7 @@ int main(int argc, char *argv[])
 	//app.setLayerOpacity("DebugLayer", 0.7f); 
 	app.setLayerOpacity("GroundMoveSpeed", 0.0f); 
 	//app.setDefaultGame("level1.tmx", "MyAI", "DirectMoverAI", 4);
-	app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "LobsterAI", "Mie", 4);
+	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "LobsterAI", "Mie", 4);
 	//	app.setDefaultGame("Level1.tmx", "AutoAttackFlagCarryingBot", "JoystickController", "YourNameHere", 4);
 	//	app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "DirectMoverAI", "YourNameHere", 4);
 	//	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", "YourNameHere", 4);

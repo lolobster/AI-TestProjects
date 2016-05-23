@@ -44,28 +44,31 @@ public:
 
 		if (otherType == "HomeBase")
 		{
+			printf("Base reached!\n\n");
+			stop();
+
 			if (hasItem())
 			{
 				printf("Dropping bomb!\n\n");
 				dropItem1();
-				stop();
 			}
 		}
-		if (otherType == "Dynamite")
+		else if (otherType == "Dynamite")
 		{
 			// set new target to Enemy Base 
 			printf("Reached Dynamite!\n\n");
 			// also, actually PICK UP the bomb
+
 			setMoveTargetObject(getEnemyBase(), 1.0f);
 		}
 
-		if (msgName == "TakingDamage")
+		else if (msgName == "TakingDamage")
 		{
 			// Shoot back
 			printf("Taking damage!\n\n");
 			//setShootTarget();
 		}
-		if (msgName == "ZeroHealth")
+		else if (msgName == "ZeroHealth")
 		{ 
 			printf("A soldier died!\n\n");
 		}
@@ -118,16 +121,16 @@ public:
 			resetMoveTargetObject();
 			return;
 		}
-		if (m_gameObjectToGo != gameObjectToGo)
+		else
 		{
 			newTarget = true;
 			m_gameObjectToGo = gameObjectToGo;
 			m_reachTolerance = reachTolerance;
 			findPath();
 			m_distanceToDestination = slm::length(m_gameObjectToGo->getPosition() - getGameObject()->getPosition());
+			if (m_gameObjectToGo->getName() == "GoalPosition")
+				preferPickItem();
 		}
-		preferPickItem();
-
 	}
 
 	void resetMoveTargetObject()
@@ -137,6 +140,7 @@ public:
 		m_reachTolerance = 0.0f;
 		m_distanceToDestination = 0.0f;
 		stop();
+		targets.clear();
 	}
 
 	// This virtual method is automatically called by map/layer, when update is called from main.cpp
