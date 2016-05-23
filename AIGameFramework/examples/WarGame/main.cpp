@@ -11,6 +11,8 @@
 #include "LobsterAI.h"
 #include "JoystickController.h"
 
+#include <Layer.h>
+
 
 class MyPlayerController : public PlayerController
 {
@@ -22,7 +24,6 @@ private:
 	std::vector< yam2d::Ref<AutoAttackFlagCarryingBot> > m_autoAttackFlagCarryingBots;
 	PathFindingApp *app;
 	LobsterAI* lobster;
-
 public:
 	MyPlayerController()
 		: PlayerController()
@@ -74,7 +75,7 @@ public:
 			m_directMoverAIControllers.push_back(controller);
 			return controller;
 		}
-
+		
 		if (playerName == "AutoAttackFlagCarryingBot")
 		{
 			AutoAttackFlagCarryingBot* controller = new AutoAttackFlagCarryingBot(ownerGameObject, gameController, type);
@@ -107,7 +108,7 @@ public:
 		app->setEnvironmentInfo(environmentInfo);
 		//lobster->setMyHomeBase(environmentInfo, this);
 		//lobster->setEnemyBase(environmentInfo, this);
-		
+
 		for (size_t i = 0; i < m_lobsterAI.size(); ++i)
 		{
 			if (m_lobsterAI[i]->isSoldier())
@@ -142,7 +143,7 @@ public:
 	// Called each frame. Update you player character controllers in this function.
 	virtual void onUpdate(GameEnvironmentInfoProvider* environmentInfo, float deltaTime)
 	{
-		//	yam2d::esLogMessage("onUpdate");
+	//	yam2d::esLogMessage("onUpdate");
 	}
 
 	// Called, when game event has ocurred.
@@ -249,7 +250,7 @@ public:
 			ItemEvent* itemEvent = dynamic_cast<ItemEvent*>(eventObject);
 			assert(itemEvent != 0);
 			yam2d::esLogMessage("%s: gameObjectType=%s", eventName.c_str(), itemEvent->getItemGameObject()->getType().c_str());
-
+			
 			for (size_t i = 0; i < m_autoAttackFlagCarryingBots.size(); ++i)
 			{
 				m_autoAttackFlagCarryingBots[i]->resetTargetToShoot();
@@ -261,8 +262,9 @@ public:
 				m_lobsterAI[i]->setMoveTargetObject(dynamite, 1.0f);
 			}
 
-			// Item dropped.
+			// Item propped.
 			// Start going straight to dynamite
+			const yam2d::GameObject* dynamite = environmentInfo->getDynamite();
 			for (size_t i = 0; i < m_directMoverAIControllers.size(); ++i)
 			{
 				m_directMoverAIControllers[i]->setMoveTargetObject(dynamite, 1.0f);
@@ -302,10 +304,10 @@ public:
 		{
 			int teamIndex = gameObject->getProperties()["teamIndex"].get<int>();
 
-			TakingDamageEvent* damageEvent = dynamic_cast<TakingDamageEvent*>(eventObject);
+			TakingDamageEvent* damageEvent = dynamic_cast<TakingDamageEvent*>(eventObject);			
 			yam2d::GameObject* damageFromObject = damageEvent->getFromObject();
 			float newHealth = damageEvent->getNewHealth();
-			yam2d::esLogMessage("%s(team=%d) %s: fromObject=%s. New health: %3.1f", gameObject->getType().c_str(), teamIndex, eventName.c_str(), damageFromObject->getType().c_str(), newHealth);
+		//	yam2d::esLogMessage("%s(team=%d) %s: fromObject=%s. New health: %3.1f", gameObject->getType().c_str(), teamIndex, eventName.c_str(), damageFromObject->getType().c_str(), newHealth);
 		}
 		else if (eventName == "ZeroHealth")
 		{
@@ -322,23 +324,23 @@ public:
 
 int main(int argc, char *argv[])
 {
-	GameApp app(argc, argv, 1280, 800);
+	yam2d::Ref<GameApp> app = new GameApp(argc, argv, 1280, 800);
 	//app.disableLayer("Ground");
-	app.disableLayer("ObjectSpawns");
-	app.disableLayer("GroundTypeColliders");
-	//app.disableLayer("GroundMoveSpeed");
+	app->disableLayer("ObjectSpawns");
+	app->disableLayer("GroundTypeColliders");
+	app->disableLayer("GroundMoveSpeed");
 	//app.setLayerOpacity("DebugLayer", 0.7f); 
-	app.setLayerOpacity("GroundMoveSpeed", 0.0f); 
+	//app.setLayerOpacity("GroundMoveSpeed", 0.7f); 
 	//app.setDefaultGame("level1.tmx", "MyAI", "DirectMoverAI", 4);
-	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "LobsterAI", "Mie", 4);
-	//	app.setDefaultGame("Level1.tmx", "AutoAttackFlagCarryingBot", "JoystickController", "YourNameHere", 4);
-	//	app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "DirectMoverAI", "YourNameHere", 4);
-	//	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", "YourNameHere", 4);
-	//	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", 4);
+	app->setDefaultGame("Level0.tmx", "DirectMoverAI", "LobsterAI", "YourNameHere", 4);
+//	app.setDefaultGame("Level1.tmx", "AutoAttackFlagCarryingBot", "JoystickController", "YourNameHere", 4);
+//	app.setDefaultGame("Level0.tmx", "AutoAttackFlagCarryingBot", "DirectMoverAI", "YourNameHere", 4);
+//	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", "YourNameHere", 4);
+//	app.setDefaultGame("Level0.tmx", "DirectMoverAI", "AutoAttackFlagCarryingBot", 4);
 	MyPlayerController player1Controller;
-	app.setPlayer1Controller(&player1Controller);
+	app->setPlayer1Controller(&player1Controller);
 	MyPlayerController player2Controller;
-	app.setPlayer2Controller(&player2Controller);
+	app->setPlayer2Controller(&player2Controller);
 
-	return app.run();
+	return app->run();
 }

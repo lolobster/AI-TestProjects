@@ -38,9 +38,6 @@
     <ClInclude Include="ExampleBehaviours.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LobsterAI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Pathfinding\ClosedList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pathfinding\SearchNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LobsterAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

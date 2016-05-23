@@ -27,7 +27,6 @@
 #include <vector>
 #include "PropertySet.h"
 #include "SpriteBatch.h"
-#include "GameObject.h"
 #include <Ref.h>
 #include <Entity.h>
 
@@ -35,7 +34,7 @@ namespace yam2d
 {
 
 class Map;
-//class GameObject;
+class GameObject;
 
 /**
  * Class for single layer of Map.
