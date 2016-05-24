@@ -24,6 +24,7 @@ public:
 		, m_aimTolerance(0.0f)
 		, player(0)
 		, newTarget(false)
+		, isDefending(false)
 	{
 		m_startPos = owner->getPosition();
 	}
@@ -33,35 +34,44 @@ public:
 
 	virtual void onMessage(const std::string& msgName, yam2d::Object* eventObject)
 	{
+		CharacterController::onMessage(msgName, eventObject);
+
 		setMyHomeBase();
 		setEnemyBase();
-
-		CollisionEvent* collisionEvent = dynamic_cast<CollisionEvent*>(eventObject);
-		assert(collisionEvent != 0);
-		assert(collisionEvent->getMyGameObject() == getGameObject());
-		yam2d::GameObject* otherGo = collisionEvent->getOtherGameObject();
-		std::string otherType = otherGo->getType();
-
-		if (otherType == "HomeBase")
+		if (msgName == "Collision")
 		{
-			printf("Base reached!\n\n");
-			stop();
+			CollisionEvent* collisionEvent = dynamic_cast<CollisionEvent*>(eventObject);
+			assert(collisionEvent != 0);
+			assert(collisionEvent->getMyGameObject() == getGameObject());
+			yam2d::GameObject* otherGo = collisionEvent->getOtherGameObject();
+			std::string otherType = otherGo->getType();
 
-			if (hasItem())
+			if (otherType == "HomeBase")
 			{
-				printf("Dropping bomb!\n\n");
-				dropItem1();
+				if (!isDefending)
+				{
+					stop();
+					resetMoveTargetObject();
+					isDefending = true;
+				}
+
+				if (hasItem())
+				{
+					stop();
+					printf("Dropping bomb!\n\n");
+					dropItem1();
+				}
 			}
-		}
-		else if (otherType == "Dynamite")
-		{
-			// set new target to Enemy Base 
-			printf("Reached Dynamite!\n\n");
-			// also, actually PICK UP the bomb
+			else if (otherType == "Dynamite")
+			{
+				// set new target to Enemy Base 
+				printf("Reached Dynamite!\n\n");
+				// also, actually PICK UP the bomb
+				preferPickItem();
+				setMoveTargetObject(getEnemyBase(), 1.0f);
+			}
 
-			setMoveTargetObject(getEnemyBase(), 1.0f);
 		}
-
 		else if (msgName == "TakingDamage")
 		{
 			// Shoot back
@@ -69,9 +79,11 @@ public:
 			//setShootTarget();
 		}
 		else if (msgName == "ZeroHealth")
-		{ 
+		{
 			printf("A soldier died!\n\n");
 		}
+		else if (msgName == "ItemPicked")
+			setMoveTargetObject(getEnemyBase(), 1.0f);
 
 	}
 
@@ -116,6 +128,7 @@ public:
 
 	void setMoveTargetObject(const yam2d::GameObject* gameObjectToGo, float reachTolerance)
 	{
+		//preferPickItem();
 		if (gameObjectToGo == 0)
 		{
 			resetMoveTargetObject();
@@ -128,8 +141,11 @@ public:
 			m_reachTolerance = reachTolerance;
 			findPath();
 			m_distanceToDestination = slm::length(m_gameObjectToGo->getPosition() - getGameObject()->getPosition());
-			if (m_gameObjectToGo->getName() == "GoalPosition")
-				preferPickItem();
+			if (m_distanceToDestination <= m_reachTolerance)
+			{
+				stop();
+				resetMoveTargetObject();
+			}
 		}
 	}
 
@@ -163,10 +179,13 @@ public:
 			}
 		}
 		if (m_distanceToDestination <= m_reachTolerance && !targets.empty())
+		{
+			stop();
 			targets.pop_back();
+		}
 	}
 
-	void setShootTarget(yam2d::GameObject* targetToShoot, float predictionDistance, float aimTolerance)
+	void setShootTarget(const yam2d::GameObject* targetToShoot, float predictionDistance, float aimTolerance)
 	{
 		shootTarget = targetToShoot;
 		m_predictionDistance = predictionDistance;
@@ -206,6 +225,7 @@ private:
 	const yam2d::GameObject* shootTarget;
 	PlayerController* player;
 	bool newTarget;
+	bool isDefending;
 protected:
 };
 

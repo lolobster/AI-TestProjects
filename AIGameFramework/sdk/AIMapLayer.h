@@ -10,6 +10,7 @@
 
 #include <Texture.h>
 #include <Layer.h>
+#include <yam2d_dll_api.h>
 #include <stdint.h>
 class YAM2D_API AIMapLayer
 {
