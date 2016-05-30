@@ -22,7 +22,8 @@ namespace LobsterAI
 			, m_predictionDistance(0.0f)
 			, m_aimTolerance(0.0f)
 			, player(0)
-			, reachedDefensivePos(false)
+			, newTarget(false)
+			, isDefending(false)
 		{
 			m_startPos = owner->getPosition();
 		}
@@ -49,17 +50,15 @@ namespace LobsterAI
 
 				if (otherType == "HomeBase")
 				{
-					//if (!reachedDefensivePos)
-					//{
-					//	//stop();
-					//	resetMoveTargetObject();
-					//	reachedDefensivePos = true;
-					//	setMoveTargetObject(getEnemyBase(), 0.1f);
-					//}
+					if (!isDefending)
+					{
+						stop();
+						resetMoveTargetObject();
+						isDefending = true;
+					}
 
 					if (hasItem())
 					{
-						printf("Dropping bomb!\n\n");
 						dropItem1();
 					}
 				}
@@ -68,7 +67,7 @@ namespace LobsterAI
 					// set new target to Enemy Base 
 					printf("Reached Dynamite!\n\n");
 					preferPickItem();
-					resetMoveTargetObject();
+					//resetMoveTargetObject();
 					setMoveTargetObject(getEnemyBase(), 1.0f);
 				}
 			}
@@ -113,9 +112,12 @@ namespace LobsterAI
 
 		void findPath()
 		{
-
-			targets = pApp->doPathfinding(AIObject->getPosition().x, AIObject->getPosition().y,
-				m_gameObjectToGo->getPosition().x, m_gameObjectToGo->getPosition().y);
+			if (newTarget)
+			{
+				targets = pApp->doPathfinding(AIObject->getPosition().x, AIObject->getPosition().y,
+					m_gameObjectToGo->getPosition().x, m_gameObjectToGo->getPosition().y);
+			}
+			newTarget = false;
 			printf_s("Path found!\n");
 		}
 
@@ -129,15 +131,24 @@ namespace LobsterAI
 			}
 			else
 			{
+				newTarget = true;
 				m_gameObjectToGo = gameObjectToGo;
 				m_reachTolerance = reachTolerance;
 				findPath();
 				m_distanceToDestination = slm::length(m_gameObjectToGo->getPosition() - getGameObject()->getPosition());
+				preferPickItem();
+
+				if (m_distanceToDestination <= m_reachTolerance)
+				{
+					stop();
+					resetMoveTargetObject();	
+				}
 			}
 		}
 
 		void resetMoveTargetObject()
 		{
+			newTarget = false;
 			m_gameObjectToGo = 0;
 			m_reachTolerance = 0.0f;
 			m_distanceToDestination = 0.0f;
@@ -167,7 +178,6 @@ namespace LobsterAI
 
 			if (m_distanceToDestination <= m_reachTolerance && !targets.empty())
 			{
-				stop();
 				targets.pop_back();
 			}
 		}
@@ -211,8 +221,8 @@ namespace LobsterAI
 		const yam2d::GameObject* AIObject;
 		const yam2d::GameObject* shootTarget;
 		PlayerController* player;
-		bool reachedDefensivePos;
-
+		bool newTarget;
+		bool isDefending;
 	};
 
 
@@ -247,9 +257,10 @@ namespace LobsterAI
 			if (playerName == "LobsterAI")
 			{
 				LobsterAIController* myAI = new LobsterAIController(ownerGameObject, gameController, type);
-				m_controllers.push_back(myAI);
 				myAI->setApp(app);
 				myAI->setPlayerController(this);
+				m_controllers.push_back(myAI);
+
 				return myAI;
 			}
 
@@ -276,10 +287,11 @@ namespace LobsterAI
 			{
 				if (m_controllers[i]->isSoldier())
 				{
-					m_controllers[i]->setMoveTargetObject(dynamite, 0.5f);
+					m_controllers[i]->preferPickItem();
+					m_controllers[i]->setMoveTargetObject(dynamite, 0.2f);
 				}
 				else if (m_controllers[i]->isRobot())
-					m_controllers[i]->setMoveTargetObject(environmentInfo->getMyHomeBase(this), 2.5f);
+					m_controllers[i]->setMoveTargetObject(environmentInfo->getMyHomeBase(this), 1.2f);
 			}
 		}
 
@@ -314,7 +326,7 @@ namespace LobsterAI
 					const yam2d::GameObject* homeBase = environmentInfo->getEnemyHomeBase(this);
 					for (size_t i = 0; i < m_controllers.size(); ++i)
 					{
-						m_controllers[i]->resetShootTarget();
+						m_controllers[i]->resetMoveTargetObject();
 						m_controllers[i]->setMoveTargetObject(homeBase, 1.0f);
 					}
 				}
@@ -325,7 +337,7 @@ namespace LobsterAI
 					// Stop and Shoot enemy
 					for (size_t i = 0; i < m_controllers.size(); ++i)
 					{
-						m_controllers[i]->resetMoveTargetObject();
+						//m_controllers[i]->resetMoveTargetObject();
 						m_controllers[i]->setShootTarget(itemEvent->getCharacterController()->getGameObject(), 1.0f, 0.05f);
 					}
 				}
@@ -335,16 +347,14 @@ namespace LobsterAI
 				ItemEvent* itemEvent = dynamic_cast<ItemEvent*>(eventObject);
 				assert(itemEvent != 0);
 				yam2d::esLogMessage("Item dropped. Stop Shooting and Chase Dynamite.");
-				for (size_t i = 0; i < m_controllers.size(); ++i)
-				{
-					m_controllers[i]->resetShootTarget();
-				}
 
 				// Start going straight to dynamite
 				const yam2d::GameObject* dynamite = environmentInfo->getDynamite();
 				for (size_t i = 0; i < m_controllers.size(); ++i)
 				{
+					m_controllers[i]->resetShootTarget();
 					m_controllers[i]->setMoveTargetObject(dynamite, 1.0f);
+					m_controllers[i]->preferPickItem();
 				}
 			}
 			else

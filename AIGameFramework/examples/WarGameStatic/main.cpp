@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 	app->disableLayer("ObjectSpawns");
 	app->disableLayer("GroundTypeColliders");
 	app->disableLayer("GroundMoveSpeed");
-	app->setDefaultGame("Level1.tmx", "LobsterAI", "JohnDoe", "LobsterAI", 4);
+	app->setDefaultGame("Level0.tmx", "LobsterAI", "JohnDoe", "LobsterAI", 4);
 	app->setPlayer2Controller(JohnDoe::createNewPlayer());
 	app->setPlayer1Controller(LobsterAI::createNewPlayer());
 
