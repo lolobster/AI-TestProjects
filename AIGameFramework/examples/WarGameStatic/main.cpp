@@ -6,6 +6,7 @@
 //
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #include <JohnDoe.h>
+#include <LobsterAI.h>
 #include <MikkoRomppainen.h>
 #include <PassCourse.h>
 #include "GameApp.h"
@@ -16,9 +17,9 @@ int main(int argc, char *argv[])
 	app->disableLayer("ObjectSpawns");
 	app->disableLayer("GroundTypeColliders");
 	app->disableLayer("GroundMoveSpeed");
-	app->setDefaultGame("Level0.tmx", "PassCourse", "JohnDoe", "JohnDoe", 4);
-	app->setPlayer1Controller(PassCourse::createNewPlayer());
+	app->setDefaultGame("Level1.tmx", "LobsterAI", "JohnDoe", "LobsterAI", 4);
 	app->setPlayer2Controller(JohnDoe::createNewPlayer());
+	app->setPlayer1Controller(LobsterAI::createNewPlayer());
 
 	return app->run();
 }

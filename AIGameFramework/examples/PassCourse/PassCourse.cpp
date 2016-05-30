@@ -116,7 +116,6 @@ namespace PassCourse
 			m_gameObjectToGo = gameObjectToGo;
 			m_reachTolerance = reachTolerance;
 			m_distanceToDestination = slm::length(m_gameObjectToGo->getPosition() - getGameObject()->getPosition());
-			preferPickItem();
 		}
 
 		void resetMoveTargetObject()

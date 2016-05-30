@@ -3,13 +3,7 @@ LobsterAI
 LobsterAI
 LobsterAI
 LobsterAI
+PassCourse
 LobsterAI
 LobsterAI
 LobsterAI
-LobsterAI
-LobsterAI
-LobsterAI
-LobsterAI
-LobsterAI
-DirectMoverAI
-DirectMoverAI

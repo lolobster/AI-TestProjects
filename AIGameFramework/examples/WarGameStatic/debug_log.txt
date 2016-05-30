@@ -1,0 +1,4 @@
+teamIndex:0
+teamIndex:1
+Loading of level "Level1.tmx" okay! Size: 40x40 Load time: 1.43
+onGameStarted
