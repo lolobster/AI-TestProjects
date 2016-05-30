@@ -62,14 +62,6 @@ namespace LobsterAI
 						dropItem1();
 					}
 				}
-				else if (otherType == "Dynamite")
-				{
-					// set new target to Enemy Base 
-					printf("Reached Dynamite!\n\n");
-					preferPickItem();
-					//resetMoveTargetObject();
-					setMoveTargetObject(getEnemyBase(), 1.0f);
-				}
 			}
 			else if (msgName == "TakingDamage")
 			{
@@ -82,8 +74,10 @@ namespace LobsterAI
 				printf("A soldier died!\n\n");
 			}
 			else if (msgName == "ItemPicked")
+			{
+				resetMoveTargetObject();
 				setMoveTargetObject(getEnemyBase(), 1.0f);
-
+			}
 		}
 
 		void setPlayerController(PlayerController* playerController)
@@ -288,7 +282,7 @@ namespace LobsterAI
 				if (m_controllers[i]->isSoldier())
 				{
 					m_controllers[i]->preferPickItem();
-					m_controllers[i]->setMoveTargetObject(dynamite, 0.2f);
+					m_controllers[i]->setMoveTargetObject(dynamite, 1.0f);
 				}
 				else if (m_controllers[i]->isRobot())
 					m_controllers[i]->setMoveTargetObject(environmentInfo->getMyHomeBase(this), 1.2f);
@@ -296,7 +290,7 @@ namespace LobsterAI
 		}
 
 
-		// Called when game has ended. Can be used some cuystom deinitialization after game.
+		// Called when game has ended. Can be used some custom deinitialization after game.
 		virtual void onGameOver(GameEnvironmentInfoProvider* environmentInfo, const std::string& gameResultString)
 		{
 			yam2d::esLogMessage("onGameOver: %s wins!", gameResultString.c_str());
@@ -326,7 +320,8 @@ namespace LobsterAI
 					const yam2d::GameObject* homeBase = environmentInfo->getEnemyHomeBase(this);
 					for (size_t i = 0; i < m_controllers.size(); ++i)
 					{
-						m_controllers[i]->resetMoveTargetObject();
+						m_controllers[i]->resetShootTarget();
+						//m_controllers[i]->resetMoveTargetObject();
 						m_controllers[i]->setMoveTargetObject(homeBase, 1.0f);
 					}
 				}
@@ -353,6 +348,7 @@ namespace LobsterAI
 				for (size_t i = 0; i < m_controllers.size(); ++i)
 				{
 					m_controllers[i]->resetShootTarget();
+					m_controllers[i]->resetMoveTargetObject();
 					m_controllers[i]->setMoveTargetObject(dynamite, 1.0f);
 					m_controllers[i]->preferPickItem();
 				}
